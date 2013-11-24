@@ -1,10 +1,21 @@
 package nl.ypmania.demo.config;
 
+import java.util.List;
+
+import org.codehaus.jackson.map.AnnotationIntrospector;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.introspect.JacksonAnnotationIntrospector;
+import org.codehaus.jackson.xc.JaxbAnnotationIntrospector;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
+import org.springframework.http.converter.xml.MarshallingHttpMessageConverter;
+import org.springframework.oxm.jaxb.Jaxb2Marshaller;
+import org.springframework.oxm.jaxb.PublicJaxb2Scanner;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -21,6 +32,38 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         registry.addResourceHandler("/resources/**")   // Any request to /resources/...
                 .addResourceLocations("/resources/");  // is served from src/main/webapp/resources/...
                                                        // (or the root of the packaged WAR)
+    }
+    
+    @Override
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+        converters.add(xmlConverter());
+        converters.add(jsonConverter());
+    }
+    
+    /** Creates a JSON converter for Jackson, reading both JAXB and Jackson annotations */
+    public MappingJacksonHttpMessageConverter jsonConverter() {
+        MappingJacksonHttpMessageConverter m = new MappingJacksonHttpMessageConverter();
+        ObjectMapper objectMapper = new ObjectMapper();
+        AnnotationIntrospector primary = new JacksonAnnotationIntrospector();
+        AnnotationIntrospector secondary = new JaxbAnnotationIntrospector();
+        AnnotationIntrospector pair = new AnnotationIntrospector.Pair(primary, secondary);
+        objectMapper.setAnnotationIntrospector(pair);
+        m.setObjectMapper(objectMapper );
+        return m;
+    }
+    
+    /** Creates an XML converter that knows about all JAXB-annotated classes in nl.ypmania */
+    public MarshallingHttpMessageConverter xmlConverter() {
+        // The "packagesToScan" feature of JaxbMarshaller seems to not work.
+        // The JIRA below is apparently not quite resolved in 3.2.5.
+        // https://jira.springsource.org/browse/SPR-9152 
+        
+        Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
+        PublicJaxb2Scanner scanner = new PublicJaxb2Scanner(
+                Thread.currentThread().getContextClassLoader(), new String[] { "nl.ypmania" });
+        Class<?>[] jaxb2Classes = scanner.scanPackages();
+        marshaller.setClassesToBeBound(jaxb2Classes);
+        return new MarshallingHttpMessageConverter(marshaller, marshaller);
     }
     
     @Bean
