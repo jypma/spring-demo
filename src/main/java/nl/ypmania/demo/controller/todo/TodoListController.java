@@ -6,7 +6,6 @@ import java.util.List;
 
 import javax.ws.rs.core.MediaType;
 
-import nl.ypmania.demo.controller.AbstractController;
 import nl.ypmania.demo.todo.TodoItem;
 import nl.ypmania.demo.todo.TodoService;
 import nl.ypmania.demo.util.ListWrapper;
@@ -21,7 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/todos")
-public class TodoListController extends AbstractController {
+public class TodoListController {
     private static final Logger log = LoggerFactory.getLogger(TodoListController.class);
     
     private final TodoService todoService;

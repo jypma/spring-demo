@@ -6,7 +6,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import javax.validation.Valid;
 import javax.ws.rs.core.MediaType;
 
-import nl.ypmania.demo.controller.AbstractController;
 import nl.ypmania.demo.todo.TodoItem;
 import nl.ypmania.demo.todo.TodoService;
 
@@ -21,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/todos/create")
-public class CreateTodoController extends AbstractController {
+public class CreateTodoController {
     private static final Logger log = LoggerFactory.getLogger(CreateTodoController.class);
     
     private final TodoService todoService;
