@@ -38,12 +38,13 @@ public class TodoListController extends AbstractController {
     
     @RequestMapping(method = GET)
     public String showList() {
+        log.debug("showing list");
         return "/todo/list"; 
     }
 
     @RequestMapping(method = GET, produces = { MediaType.TEXT_XML, MediaType.APPLICATION_JSON } )
-    public @ResponseBody ListWrapper<TodoItem> renderList(@ModelAttribute("list") List<TodoItem> list) {
-        log.debug("Listing");
+    public @ResponseBody ListWrapper<TodoItem> getList(@ModelAttribute("list") List<TodoItem> list) {
+        log.debug("getting list");
         return ListWrapper.of(list);
     }
     
