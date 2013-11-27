@@ -25,7 +25,7 @@ import org.springframework.web.servlet.view.JstlView;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = "nl.ypmania.demo.controller")
+@ComponentScan(basePackages = { "nl.ypmania.demo.controller" })
 public class WebConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

@@ -1,15 +1,19 @@
-package nl.ypmania.demo.controller;
+package nl.ypmania.demo.controller.todo;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
-import java.util.Collections;
 import java.util.List;
 
+import javax.ws.rs.core.MediaType;
+
+import nl.ypmania.demo.controller.AbstractController;
 import nl.ypmania.demo.todo.TodoItem;
+import nl.ypmania.demo.todo.TodoService;
 import nl.ypmania.demo.util.ListWrapper;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,19 +23,25 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/todos")
 public class TodoListController extends AbstractController {
     private static final Logger log = LoggerFactory.getLogger(TodoListController.class);
+    
+    private final TodoService todoService;
+    
+    @Autowired
+    public TodoListController(TodoService todoService) {
+        this.todoService = todoService;
+    }
 
     @ModelAttribute("list")
     public List<TodoItem> list() {
-        //TODO stub
-        return Collections.singletonList(TodoItem.of("Hello"));
+        return todoService.listAll();
     }
     
     @RequestMapping(method = GET)
     public String showList() {
-        return "/todos"; 
+        return "/todo/list"; 
     }
 
-    @RequestMapping(method = GET, produces = { "text/xml", "application/json" } )
+    @RequestMapping(method = GET, produces = { MediaType.TEXT_XML, MediaType.APPLICATION_JSON } )
     public @ResponseBody ListWrapper<TodoItem> renderList(@ModelAttribute("list") List<TodoItem> list) {
         log.debug("Listing");
         return ListWrapper.of(list);
