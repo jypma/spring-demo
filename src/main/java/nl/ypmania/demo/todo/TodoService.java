@@ -1,24 +1,24 @@
 package nl.ypmania.demo.todo;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.stereotype.Service;
 
 @Service
 public class TodoService {
-    private List<TodoItem> all = new ArrayList<TodoItem>();
+    private Map<UUID, TodoItem> all = new ConcurrentHashMap<UUID, TodoItem>();
     
     public TodoService() {
-        all.add(TodoItem.of("Hello"));
+        save(TodoItem.create("Hello"));
     }
     
-    public List<TodoItem> listAll() {
-        return Collections.unmodifiableList(all);        
+    public Iterable<TodoItem> listAll() {
+        return all.values();        
     }
 
-    public void create(TodoItem item) {
-        all.add(item);
+    public void save(TodoItem item) {
+        all.put(item.getId(), item);
     }
 }

@@ -1,5 +1,6 @@
 package nl.ypmania.demo.util;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -12,6 +13,12 @@ import org.codehaus.jackson.annotate.JsonProperty;
 @XmlRootElement(name="List")
 @XmlAccessorType(XmlAccessType.NONE)
 public class ListWrapper<T> {
+    public static <T> ListWrapper<T> of (Iterable<T> items) {
+        ArrayList<T> l = new ArrayList<T>();
+        for (T t: items) l.add(t);
+        return new ListWrapper<T>(l);
+    }
+    
     public static <T> ListWrapper<T> of (List<T> items) {
         return new ListWrapper<T>(items);
     }

@@ -10,6 +10,7 @@
 <body>
   <h3>Add a todo item</h3>
   <form:form id="form" method="post" modelAttribute="item">
+    <form:hidden path="id"/>
 
     <div>
       <form:label path="title"><spring:message code="item.title" /></form:label>

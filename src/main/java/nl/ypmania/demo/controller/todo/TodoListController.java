@@ -2,8 +2,6 @@ package nl.ypmania.demo.controller.todo;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
-import java.util.List;
-
 import javax.ws.rs.core.MediaType;
 
 import nl.ypmania.demo.todo.TodoItem;
@@ -31,7 +29,7 @@ public class TodoListController {
     }
 
     @ModelAttribute("list")
-    public List<TodoItem> list() {
+    public Iterable<TodoItem> list() {
         return todoService.listAll();
     }
     
@@ -42,7 +40,7 @@ public class TodoListController {
     }
 
     @RequestMapping(method = GET, produces = { MediaType.TEXT_XML, MediaType.APPLICATION_JSON } )
-    public @ResponseBody ListWrapper<TodoItem> getList(@ModelAttribute("list") List<TodoItem> list) {
+    public @ResponseBody ListWrapper<TodoItem> getList(@ModelAttribute("list") Iterable<TodoItem> list) {
         log.debug("getting list");
         return ListWrapper.of(list);
     }
