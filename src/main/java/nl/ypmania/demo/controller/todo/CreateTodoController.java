@@ -46,33 +46,11 @@ public class CreateTodoController {
         return TodoItem.empty();
     }
     
-    @RequestMapping(value="/{id}", method = PUT, consumes = { MediaType.TEXT_XML, MediaType.APPLICATION_JSON } )
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void put (@PathVariable("id") UUID id, @Valid @RequestBody TodoItem item, UriComponentsBuilder b) {
-        item = item.withId(id);
-        log.debug ("Storing REST todo item {}", item);
-        todoService.save(item);
-    }
-    
     // The URL is specified at controller-level, since both methods in this controller
     // work on the same URL.
     @RequestMapping(value="/create", method = GET)
     public String showCreate() {
         return "/todo/create";
-    }
-    
-    // By specifying @Valid, attempts to call this method will result in
-    // Spring throwing a MethodArgumentNotValidException instead. This will by 
-    // default result in an HTTP error 400 with a generic error message.
-    @RequestMapping(value="/create", method = POST, consumes = { MediaType.TEXT_XML, MediaType.APPLICATION_JSON } )
-    public ResponseEntity<?> createFromBody(@Valid @RequestBody TodoItem item, UriComponentsBuilder b) {
-        item = item.withId();
-        log.debug("Creating REST todo item {}", item);
-        todoService.save(item);
-        
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(b.path("/todos/{id}").buildAndExpand(item.getId()).toUri());
-        return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
     }
     
     // By adding a BindingResult as argument, the method will be invoked also
@@ -88,6 +66,31 @@ public class CreateTodoController {
             todoService.save(item);
             return "redirect:/todos";            
         }
+    }
+    
+    
+    // ----------------- REST methods come here ----------------------------
+    
+    @RequestMapping(value="/{id}", method = PUT, consumes = { MediaType.TEXT_XML, MediaType.APPLICATION_JSON } )
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void put (@PathVariable("id") UUID id, @Valid @RequestBody TodoItem item, UriComponentsBuilder b) {
+        item = item.withId(id);
+        log.debug ("Storing REST todo item {}", item);
+        todoService.save(item);
+    }
+    
+    // By specifying @Valid, attempts to call this method will result in
+    // Spring throwing a MethodArgumentNotValidException instead. This will by 
+    // default result in an HTTP error 400 with a generic error message.
+    @RequestMapping(value="/create", method = POST, consumes = { MediaType.TEXT_XML, MediaType.APPLICATION_JSON } )
+    public ResponseEntity<?> createFromBody(@Valid @RequestBody TodoItem item, UriComponentsBuilder b) {
+        item = item.withId();
+        log.debug("Creating REST todo item {}", item);
+        todoService.save(item);
+        
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(b.path("/todos/{id}").buildAndExpand(item.getId()).toUri());
+        return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
     }
     
 }
