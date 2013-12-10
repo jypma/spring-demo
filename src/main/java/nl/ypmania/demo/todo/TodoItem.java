@@ -7,10 +7,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import nl.ypmania.demo.todo.validate.Without;
-
-import org.hibernate.validator.constraints.NotBlank;
-
 @XmlRootElement(name = "TodoItem")
 @XmlAccessorType(XmlAccessType.NONE)
 public class TodoItem {
@@ -25,9 +21,7 @@ public class TodoItem {
     @XmlElement(name = "ID")
     private UUID id;
     
-    @NotBlank
     @XmlElement(name = "Title")
-    @Without("at some point")
     private String title;
     
     public String getTitle() {
