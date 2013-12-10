@@ -8,8 +8,8 @@
   href="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${pageContext.request.contextPath}/" />
 </head>
 <body>
-  <h3>Add a todo item</h3>
-  <form:form id="form" method="post" modelAttribute="item">
+  <h3>Todo item</h3>
+  <form:form id="form" method="post" modelAttribute="item" action="todos/save">
     <form:hidden path="id"/>
 
     <div>
@@ -19,7 +19,7 @@
     </div>
 
     <div>
-      <button type="submit" class="btn">Add</button>
+      <button type="submit" class="btn">Save</button>
     </div>
 
   </form:form>

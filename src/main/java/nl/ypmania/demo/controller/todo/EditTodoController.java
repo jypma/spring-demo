@@ -29,13 +29,13 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @Controller
 @RequestMapping("/todos")
-public class CreateTodoController {
-    private static final Logger log = LoggerFactory.getLogger(CreateTodoController.class);
+public class EditTodoController {
+    private static final Logger log = LoggerFactory.getLogger(EditTodoController.class);
     
     private final TodoService todoService;
     
     @Autowired
-    public CreateTodoController(TodoService todoService) {
+    public EditTodoController(TodoService todoService) {
         this.todoService = todoService;
     }
 
@@ -50,12 +50,12 @@ public class CreateTodoController {
     // work on the same URL.
     @RequestMapping(value="/create", method = GET)
     public String showCreate() {
-        return "/todo/create";
+        return "/todo/edit";
     }
     
     // By adding a BindingResult as argument, the method will be invoked also
     // when the @Valid-annotated object is not valid.
-    @RequestMapping(value="/create", method = POST, consumes = { MediaType.APPLICATION_FORM_URLENCODED } )
+    @RequestMapping(value="/save", method = POST, consumes = { MediaType.APPLICATION_FORM_URLENCODED } )
     public String createFromForm(@Valid @ModelAttribute("item") TodoItem item, BindingResult result) {
         if (result.hasErrors()) {
             log.debug("Received invalid todo item {}", item);
@@ -67,8 +67,7 @@ public class CreateTodoController {
             return "redirect:/todos";            
         }
     }
-    
-    
+        
     // ----------------- REST methods come here ----------------------------
     
     @RequestMapping(value="/{id}", method = PUT, consumes = { MediaType.TEXT_XML, MediaType.APPLICATION_JSON } )
